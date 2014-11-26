@@ -18,21 +18,14 @@ public abstract class Chat extends inria.scifloware.sciflowarecomponent.Sciflowa
 	protected ArrayList<Integer> QueriesId = new ArrayList<Integer>();
 	
 	public Chat () {
-		
-
 		Command Recherche = new Command() {
-
 			@Override
-			public void execute(){
-				
+			public void execute(){				
 				// Va envoyer une query pour les voisins de ses voisins
 				getView().SearchNewNeighbours();
-				getView().addConnu(neighbours);
-				
+				getView().addConnu(neighbours);				
 			}
-
-		};
-		
+		};		
 		// Execute la query de recherche de voisins et affichage toutes les 10 secs
 		trigger(10000, Recherche, true);
 	}
@@ -107,7 +100,7 @@ public abstract class Chat extends inria.scifloware.sciflowarecomponent.Sciflowa
 		
 	}
 	
-	// M�thode appell�e quand le composant SON est pret
+	// Méthode appellée quand le composant SON est pret
 	@Override
 	public void InitOn(){
 		super.InitOn();
@@ -125,14 +118,12 @@ public abstract class Chat extends inria.scifloware.sciflowarecomponent.Sciflowa
 	public void getVoisins(String expeditor, ArrayList<String> voisins) {
 		
 		// Recupere la liste des voisins du voisin
-		for (int i=0;i<voisins.size();i++)
-		{
+		for (int i=0;i<voisins.size();i++){
 			if (!neighbours.contains(voisins.get(i)) && voisins.get(i)!=this.getIdName())
 					{
 						neighbours.add(voisins.get(i));
 					}
-		}
-		
+		}		
 	}
 	
 	public abstract void sendQuery(String adressee, String initiator, Integer id,
