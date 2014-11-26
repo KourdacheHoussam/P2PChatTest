@@ -103,7 +103,6 @@ public class ChatFrame extends JFrame implements IChatView {
 		});
 		
 		/*** **** **** **** ***** **** **** *****/
-		
 		JButton ReSend=new JButton("Resend");
 		ReSend.addActionListener(new ActionListener() {
 			
@@ -111,12 +110,9 @@ public class ChatFrame extends JFrame implements IChatView {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				
-				// IL FAUT ECRIRE LA METHODE RESEND() DANS LE FICHIER CHAT.JAVA
-				//chat.resend("ComponentsManager", chat.getIdName(), null, messageTF.getText(), "", "", "", new PropertyMap());
 			}
 		});
 		
-		/*** **** **** **** ***** **** **** *****/
 		
 		
 		buttons.add(sendMessage, BorderLayout.WEST);

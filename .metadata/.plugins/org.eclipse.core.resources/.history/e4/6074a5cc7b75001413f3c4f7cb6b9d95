@@ -29,8 +29,6 @@
 		<attribute name="parameter" javatype="java.lang.String"/>
 	</output>
 	
-	
-	
 	<input name="voisins" method="getVoisins">
 		<attribute name="voisins" javatype="java.util.ArrayList"/>
 	</input>

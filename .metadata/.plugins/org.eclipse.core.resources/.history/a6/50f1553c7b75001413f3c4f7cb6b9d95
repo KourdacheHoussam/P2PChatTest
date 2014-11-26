@@ -29,14 +29,12 @@
 		<attribute name="parameter" javatype="java.lang.String"/>
 	</output>
 	
-	
-	
 	<input name="voisins" method="getVoisins">
 		<attribute name="voisins" javatype="java.util.ArrayList"/>
 	</input>
 
 	<!-- LE RECEPTEUR DU GOSSIP DÉCIDE OU PAS DE LE RENVOYER AUX VOISINS À L'AIDE -->
-	<!--   DE LA METHODE sendVoisins() -->
+	<!--   DE LA METHODE sendVoisins()-->
 	<output name="voisins" method="sendVoisins">
 		<attribute name="voisins" javatype="java.util.ArrayList"/>
 	</output>
