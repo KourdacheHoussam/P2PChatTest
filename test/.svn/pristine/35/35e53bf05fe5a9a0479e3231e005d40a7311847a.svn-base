@@ -1,0 +1,155 @@
+package test.view;
+
+import inria.smarttools.core.component.PropertyMap;
+
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+import test.Chat;
+
+public class ChatFrame extends JFrame implements IChatView {
+
+	private static final long serialVersionUID = 983790661010527762L;
+	private int id = 0;
+	private static int ttl = 5;
+
+	private Chat chat;
+	
+	private JTextField messageTF;
+	private JComboBox friendsCB;
+	private JComboBox friendsCB1;
+
+	private JTextArea messagesTA;
+	
+	public ChatFrame(Chat chatComponent) {
+		//super(chatComponent.getIdName());
+		//this.setTitle(chat.getIdName())
+		System.out.println(" ChatFrame ");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		chat = chatComponent;
+		
+		setSize(800, 600);
+		getContentPane().setLayout(new BorderLayout(0, 0));
+		
+		messagesTA = new JTextArea();
+		getContentPane().add(messagesTA, BorderLayout.CENTER);
+		
+		JPanel panel = new JPanel();
+		getContentPane().add(panel, BorderLayout.SOUTH);
+		panel.setLayout(new BorderLayout(0, 0));
+		
+		JPanel friend = new JPanel();
+		panel.add(friend, BorderLayout.WEST);
+		friendsCB = new JComboBox();
+		friend.add(friendsCB, BorderLayout.WEST);
+		
+		friendsCB1 = new JComboBox();
+		friend.add(friendsCB1,BorderLayout.EAST);
+		
+		messageTF = new JTextField();
+		panel.add(messageTF, BorderLayout.CENTER);
+		messageTF.setColumns(10);
+		JPanel buttons= new JPanel();
+		
+		JButton sendMessage = new JButton("Send");
+		sendMessage.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String friend = friendsCB.getSelectedItem().toString();
+				chat.output(friend, messageTF.getText());
+				messagesTA.append(friend + " <- " + messageTF.getText() + "\n");
+				
+			}
+		});
+		
+		JButton sendQuery = new JButton("Recherche");
+		sendQuery.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String friend = friendsCB.getSelectedItem().toString();
+				chat.sendQuery(friend,chat.getIdName(), id+1, messageTF.getText(), ttl);
+				chat.addID(id+1);
+				id++;
+			}
+		});
+		
+		JButton Connect = new JButton("Connect");
+		Connect.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//messagesTA.append("Connect(" + messageTF.getText() + ")\n");
+				chat.connectTo("ComponentsManager", chat.getIdName() , null, messageTF.getText(), "", "", "", new PropertyMap());
+				
+			}
+		});
+		
+		buttons.add(sendMessage, BorderLayout.WEST);
+		buttons.add(Connect, BorderLayout.EAST);
+		buttons.add(sendQuery, BorderLayout.CENTER);
+		
+		panel.add(buttons, BorderLayout.EAST);
+		panel.setVisible(true);
+		setVisible(true);
+		System.out.println(" panel ");
+	}
+
+	public void addNeighbour(String name) {
+		friendsCB.addItem(name);
+	}	
+
+	public void messageArrived(String expeditor, String message) {
+		messagesTA.append(expeditor + " -> " + message + "\n");
+	
+	}
+	
+	public void query(String expeditor, String message) {
+		messagesTA.append(expeditor + " -> " + message + "\n");
+	
+	}
+
+	public void QueryArrived(String expeditor, String initiator, Integer id,
+			String request, Integer ttl) {
+		// pour tests
+		messagesTA.append("Query :\n Expediteur : "+expeditor+"\nInitiateur : "+initiator+"\nid : "+id+"\nrequest : "+request+"\nttl : "+ttl);
+		
+	}
+
+	public void msg(String string) {
+		messagesTA.append(string+"\n");
+		
+	}
+	
+	public void setID(Integer newid) {
+		this.id=newid;
+	}
+
+	public ArrayList<String> getNeighbours() {
+		// Retourne la liste des voisins
+		ArrayList<String> voisins=new ArrayList<String>();
+		int nitems=friendsCB.getItemCount();
+		
+		for(int i=0;i<nitems;i++)
+		{
+			voisins.add(friendsCB.getItemAt(i).toString());
+		}
+		return voisins;
+	}
+
+	public void SearchNewNeighbours() {
+		// Envoie une query des nouveaux voisins a chaque voisin
+		ArrayList<String> friends=getNeighbours();
+		for(int i=0;i<friends.size();i++)
+		{
+			chat.SendQueryVoisins(friends.get(i), "");
+		}
+		
+	}
+
+}

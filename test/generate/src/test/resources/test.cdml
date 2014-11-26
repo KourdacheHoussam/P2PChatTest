@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<component name="test" type="test" extends="inria.scifloware.sciflowarecomponent" ns="test">
+
+	<containerclass name="ChatContainer"/>
+	<facadeclass name="ChatFacade" userclassname="Chat"/>
+
+	<input name="chat" method="input">
+		<attribute name="parameter" javatype="java.lang.String"/>
+	</input>
+
+	<output name="chat" method="output">
+		<attribute name="parameter" javatype="java.lang.String"/>
+	</output>
+	
+	<input name="Queryvoisins" method="ReceiveQueryVoisins">
+		<attribute name="parameter" javatype="java.lang.String"/>
+	</input>
+
+	<output name="Queryvoisins" method="SendQueryVoisins">
+		<attribute name="parameter" javatype="java.lang.String"/>
+	</output>
+	
+	<input name="voisins" method="getVoisins">
+		<attribute name="voisins" javatype="java.util.ArrayList"/>
+	</input>
+
+	<output name="voisins" method="sendVoisins">
+		<attribute name="voisins" javatype="java.util.ArrayList"/>
+	</output>
+	
+	<input name="query" method="receiveQuery">
+		<attribute name="initiator" javatype="java.lang.String"/>
+		<attribute name="id" javatype="java.lang.Integer"/>
+		<attribute name="request" javatype="java.lang.String"/>
+		<attribute name="ttl" javatype="java.lang.Integer"/>
+	</input>
+
+	<output name="query" method="sendQuery">
+		<attribute name="initiator" javatype="java.lang.String"/>
+		<attribute name="id" javatype="java.lang.Integer"/>
+		<attribute name="request" javatype="java.lang.String"/>
+		<attribute name="ttl" javatype="java.lang.Integer"/>
+	</output>
+
+	<input name="queryAnswer" method="receiveQueryAnswer">
+		<attribute name="id" javatype="java.lang.Integer"/>
+		<attribute name="answer" javatype="java.lang.String"/>
+	</input>
+
+	<output name="queryAnswer" method="sendQueryAnswer">
+		<attribute name="id" javatype="java.lang.Integer"/>
+		<attribute name="answer" javatype="java.lang.String"/>
+	</output>
+
+<!--c'est ici qu'il faut ajouter les services:  -->
+
+<!-- dans buildST: faut faire un run pour générer les services-->
+
+</component>

@@ -1,0 +1,63 @@
+/**
+ * null
+ **/
+package test;
+
+import inria.smarttools.core.util.*;
+
+/**
+ **/
+public class QueryvoisinsEvent extends StEventImpl {
+   //
+   // Fields 
+   //
+
+   /**
+    **/
+   protected java.lang.String parameter;
+
+   /**
+    **/
+   public void setParameter(java.lang.String v){
+      this.parameter = v;
+   }
+
+   public java.lang.String getParameter(){
+      return parameter;
+   }
+
+   //
+   // Constructors 
+   //
+
+   /**
+    * Constructor
+    **/
+   public   QueryvoisinsEvent(java.lang.String parameter){
+      setParameter(parameter);
+   }
+
+   /**
+    * Constructor
+    **/
+   public   QueryvoisinsEvent(String adressee, java.lang.String parameter){
+      super(adressee);
+      setParameter(parameter);
+   }
+
+
+   //
+   // Methods 
+   //
+
+   /**
+    * Return a short description of the QueryvoisinsEvent object.
+    * @return a value of the type 'String' : a string representation of this QueryvoisinsEvent
+    **/
+   public  String toString(){
+      String res = "QueryvoisinsEvent";
+      return res;
+   }
+
+
+}

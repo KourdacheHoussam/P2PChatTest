@@ -1,0 +1,212 @@
+package test;
+
+import inria.scifloware.sciflowarecomponent.command.Command;
+import inria.smarttools.core.component.PropertyMap;
+
+import java.util.ArrayList;
+
+import test.view.IChatView;
+
+import javax.swing.SwingUtilities;
+
+import test.view.ChatFrame;
+
+public abstract class Chat extends inria.scifloware.sciflowarecomponent.SciflowareComponentFacade {
+
+	protected ArrayList<String> neighbours=new ArrayList<String>();
+	protected IChatView view = null;
+	protected ArrayList<Integer> QueriesId = new ArrayList<Integer>();
+	
+	public Chat () {
+		//view = getView ();
+		//SwingUtilities.invokeLater(new Runnable() {
+       //     public void run() {
+       //         view = getView ();
+        //    }
+        //});
+		
+		
+		Command Recherche = new Command() {
+
+			@Override
+			public void execute(){
+				
+				// Va envoyer une query pour les voisins de ses voisins
+				getView().SearchNewNeighbours();
+				
+				// Affichage des chat présents
+				/*String voisins="Personnes presentes : ";
+				for(int i=0;i<neighbours.size();i++)
+				{
+					voisins= voisins + neighbours.get(i) + "; ";
+				}
+				
+				getView().msg(voisins);*/
+				
+				getView().addConnu(neighbours);
+				
+				
+			}
+
+		};
+		
+		// Execute la query de recherche de voisins et affichage toutes les 10 secs
+		trigger(10000, Recherche, true);
+	}
+	
+	public void input( String expeditor, java.lang.String parameter) {
+		
+		System.out.println("["+expeditor+"] :"+parameter );
+		getView().messageArrived(expeditor, parameter);
+		
+	}
+
+	public abstract void output( java.lang.String parameter);
+
+	public abstract void output( String destination, java.lang.String parameter);
+	
+	
+	public IChatView getView() {
+		if (view == null) {
+			view = new ChatFrame(this);
+		}
+		return view;
+	}
+
+	@Override
+	protected void neighbourJustConnected(String name, String service) {
+		if (service.equals("chat")) {
+			System.out.println(getIdName() + " can now talk to " + name);
+			getView().msg("/**** " +getIdName() + " peut maintenant parler a " + name + " ****/");
+			getView().addNeighbour(name);
+			// Ajoute aussi le nouveau connecté dans neighboors
+			if (!neighbours.contains(name))
+			neighbours.add(name);
+		}
+	}
+	
+	public void disconnectInput(String expeditor) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void shutdown(String expeditor) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public Object requestTree(String expeditor) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void quit(String expeditor) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void receiveQueryAnswer(String expeditor, Integer id, String answer) {
+		// Query Answer
+		getView().msg("/**** La reponse de la query a bien ete recue : "+expeditor+" est bien present et je suis connecte ("+answer+") ****/");
+		
+	}
+	
+	public void addID(Integer id) {
+		// Permet de stocker les ID de requêtes dèja traités
+		QueriesId.add(id);
+	}
+
+	public void receiveQuery(String expeditor, String initiator, Integer id,
+			String request, Integer ttl) {
+		// pour test // 
+		//getView().QueryArrived(expeditor, initiator, id, request, ttl);
+		
+		//System.out.println("("+this.getIdName()+") "+initiator+" cherche : "+request);
+		
+		// Si on a pas atteint la limite pour la requête et qu'elle n'as pas été traité
+		if (ttl !=0 && !QueriesId.contains(id))
+		{
+			// requête traité
+			QueriesId.add(id);
+			// permet de garder les memes ID de requetes pour tout les chats
+			getView().setID(id);
+			
+			// Si la requête nous concerne
+			if (request.equals(this.getIdName())){
+				
+				// Connection a l'initiateur
+				connectTo("ComponentsManager", getIdName() , null, initiator, "", "", "", new PropertyMap());
+				
+				getView().msg("/*** Query("+request+") arrivee ... ****/");
+				getView().msg("/**** Envoi la reponse de query ... ****/");
+				
+				//Query Answer
+				sendQueryAnswer(initiator, id, "OK" );
+			}
+			else // Si la requête nous concerne pas on la renvoie aux autres
+			{
+				ArrayList<String> voisins=new ArrayList<String>();
+				voisins.addAll(getView().getNeighbours());
+				
+				getView().msg("/**** La query("+request+") ne me concerne pas : "+voisins.size()+" voisin(s) present(s)****/");
+				
+				// je renvoie la requête a chaque voisin
+				for (int i=0;i<voisins.size();i++)
+				{
+					getView().msg("/**** J'envoie la query a mon voisin : "+voisins.get(i)+" (ttl : "+ttl+" ) ****/");
+					sendQuery(voisins.get(i),initiator,id,request,ttl-1);
+				}
+				
+			}
+			getView().msg("");
+		}
+			
+			
+		
+	}
+	
+	// M�thode appell�e quand le composant SON est pret
+	@Override
+	public void InitOn(){
+		super.InitOn();
+		
+		// Initilisation de la vue quand le composant est pr�t
+		if (view == null) {
+			view = new ChatFrame(this);
+		}
+	}
+
+	public void ReceiveQueryVoisins(String expeditor, String parameter) {
+		
+		// quand je reçois une query pour mes voisins, je renvoie ma liste de voisins
+		this.sendVoisins(expeditor,neighbours);
+		
+	}
+
+	public void getVoisins(String expeditor, ArrayList<String> voisins) {
+		
+		// Recupere la liste des voisins du voisin
+		for (int i=0;i<voisins.size();i++)
+		{
+			if (!neighbours.contains(voisins.get(i)) && voisins.get(i)!=this.getIdName())
+					{
+						neighbours.add(voisins.get(i));
+					}
+		}
+		
+	}
+	
+	public abstract void sendQuery(String adressee, String initiator, Integer id,
+			String request, Integer ttl);
+	
+	public abstract void sendQueryAnswer(String adressee, Integer id, String answer);
+
+	public abstract void sendVoisins( ArrayList<String> voisins);
+
+	public abstract void sendVoisins( String destination, ArrayList<String> voisins);
+	
+	public abstract void SendQueryVoisins( java.lang.String parameter);
+
+	public abstract void SendQueryVoisins( String destination, java.lang.String parameter);
+
+}
