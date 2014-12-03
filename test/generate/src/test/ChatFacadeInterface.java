@@ -11,11 +11,25 @@ public interface ChatFacadeInterface {
    //
 
    /**
-    * Queryvoisins
+    * queryAnswer
     * null
     * @param expeditor is the component name who sent this message
     **/
-   public  void ReceiveQueryVoisins(String expeditor, java.lang.String parameter);
+   public  void receiveQueryAnswer(String expeditor, java.lang.Integer id, java.lang.String answer);
+
+   /**
+    * query
+    * null
+    * @param expeditor is the component name who sent this message
+    **/
+   public  void receiveQuery(String expeditor, java.lang.String initiator, java.lang.Integer id, java.lang.String request, java.lang.Integer ttl);
+
+   /**
+    * voisins
+    * null
+    * @param expeditor is the component name who sent this message
+    **/
+   public  void getVoisins(String expeditor, java.util.ArrayList voisins);
 
    /**
     * disconnect
@@ -32,13 +46,6 @@ public interface ChatFacadeInterface {
    public  void input(String expeditor, java.lang.String parameter);
 
    /**
-    * query
-    * null
-    * @param expeditor is the component name who sent this message
-    **/
-   public  void receiveQuery(String expeditor, java.lang.String initiator, java.lang.Integer id, java.lang.String request, java.lang.Integer ttl);
-
-   /**
     * quit
     * quit
     * @param expeditor is the component name who sent this message
@@ -46,18 +53,18 @@ public interface ChatFacadeInterface {
    public  void quit(String expeditor);
 
    /**
-    * queryAnswer
+    * chatTwo
     * null
     * @param expeditor is the component name who sent this message
     **/
-   public  void receiveQueryAnswer(String expeditor, java.lang.Integer id, java.lang.String answer);
+   public  void imageInput(String expeditor, java.lang.String imageparameter);
 
    /**
-    * voisins
+    * Queryvoisins
     * null
     * @param expeditor is the component name who sent this message
     **/
-   public  void getVoisins(String expeditor, java.util.ArrayList voisins);
+   public  void ReceiveQueryVoisins(String expeditor, java.lang.String parameter);
 
    /**
     * shutdown
@@ -74,16 +81,64 @@ public interface ChatFacadeInterface {
    public  Object requestTree(String expeditor);
 
    /**
-    * Queryvoisins
+    * queryAnswer
     * null
     **/
-   public  void addQueryvoisinsListener(QueryvoisinsListener data);
+   public  void addQueryAnswerListener(QueryAnswerListener data);
 
    /**
-    * Queryvoisins
+    * queryAnswer
     * null
     **/
-   public  void removeQueryvoisinsListener(QueryvoisinsListener data);
+   public  void removeQueryAnswerListener(QueryAnswerListener data);
+
+   /**
+    * send
+    * 
+    **/
+   public  void addSendListener(SendListener data);
+
+   /**
+    * send
+    * 
+    **/
+   public  void removeSendListener(SendListener data);
+
+   /**
+    * undo
+    * 
+    **/
+   public  void addUndoListener(UndoListener data);
+
+   /**
+    * undo
+    * 
+    **/
+   public  void removeUndoListener(UndoListener data);
+
+   /**
+    * query
+    * null
+    **/
+   public  void addQueryListener(QueryListener data);
+
+   /**
+    * query
+    * null
+    **/
+   public  void removeQueryListener(QueryListener data);
+
+   /**
+    * voisins
+    * null
+    **/
+   public  void addVoisinsListener(VoisinsListener data);
+
+   /**
+    * voisins
+    * null
+    **/
+   public  void removeVoisinsListener(VoisinsListener data);
 
    /**
     * disconnect
@@ -96,6 +151,30 @@ public interface ChatFacadeInterface {
     * 
     **/
    public  void removeDisconnectListener(DisconnectListener data);
+
+   /**
+    * chat
+    * null
+    **/
+   public  void addChatListener(ChatListener data);
+
+   /**
+    * chat
+    * null
+    **/
+   public  void removeChatListener(ChatListener data);
+
+   /**
+    * logUndo
+    * 
+    **/
+   public  void addLogUndoListener(LogUndoListener data);
+
+   /**
+    * logUndo
+    * 
+    **/
+   public  void removeLogUndoListener(LogUndoListener data);
 
    /**
     * initData
@@ -122,40 +201,16 @@ public interface ChatFacadeInterface {
    public  void removeLogListener(LogListener data);
 
    /**
-    * query
+    * chatTwo
     * null
     **/
-   public  void addQueryListener(QueryListener data);
+   public  void addChatTwoListener(ChatTwoListener data);
 
    /**
-    * query
+    * chatTwo
     * null
     **/
-   public  void removeQueryListener(QueryListener data);
-
-   /**
-    * queryAnswer
-    * null
-    **/
-   public  void addQueryAnswerListener(QueryAnswerListener data);
-
-   /**
-    * queryAnswer
-    * null
-    **/
-   public  void removeQueryAnswerListener(QueryAnswerListener data);
-
-   /**
-    * voisins
-    * null
-    **/
-   public  void addVoisinsListener(VoisinsListener data);
-
-   /**
-    * voisins
-    * null
-    **/
-   public  void removeVoisinsListener(VoisinsListener data);
+   public  void removeChatTwoListener(ChatTwoListener data);
 
    /**
     * exit
@@ -170,40 +225,16 @@ public interface ChatFacadeInterface {
    public  void removeExitListener(ExitListener data);
 
    /**
-    * undo
-    * 
-    **/
-   public  void addUndoListener(UndoListener data);
-
-   /**
-    * undo
-    * 
-    **/
-   public  void removeUndoListener(UndoListener data);
-
-   /**
-    * logUndo
-    * 
-    **/
-   public  void addLogUndoListener(LogUndoListener data);
-
-   /**
-    * logUndo
-    * 
-    **/
-   public  void removeLogUndoListener(LogUndoListener data);
-
-   /**
-    * chat
+    * Queryvoisins
     * null
     **/
-   public  void addChatListener(ChatListener data);
+   public  void addQueryvoisinsListener(QueryvoisinsListener data);
 
    /**
-    * chat
+    * Queryvoisins
     * null
     **/
-   public  void removeChatListener(ChatListener data);
+   public  void removeQueryvoisinsListener(QueryvoisinsListener data);
 
    /**
     * connectTo
@@ -216,18 +247,6 @@ public interface ChatFacadeInterface {
     * 
     **/
    public  void removeConnectToListener(ConnectToListener data);
-
-   /**
-    * send
-    * 
-    **/
-   public  void addSendListener(SendListener data);
-
-   /**
-    * send
-    * 
-    **/
-   public  void removeSendListener(SendListener data);
 
 
 }

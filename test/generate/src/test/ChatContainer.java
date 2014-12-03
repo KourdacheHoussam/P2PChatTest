@@ -6,23 +6,43 @@ import inria.scifloware.sciflowarecomponent.SciflowareComponentContainer;
 import java.util.List;
 import java.util.ArrayList;
 import inria.smarttools.core.component.*;
+import java.lang.Integer;
 import java.lang.String;
 import inria.smarttools.core.component.PropertyMap;
-import java.lang.Integer;
 
 /**
  **/
-public class ChatContainer extends SciflowareComponentContainer implements inria.smarttools.core.component.Container, test.QueryvoisinsListener, test.DisconnectListener, test.InitDataListener, test.LogListener, test.QueryListener, test.QueryAnswerListener, test.VoisinsListener, test.ExitListener, test.UndoListener, test.LogUndoListener, test.ChatListener, test.ConnectToListener, test.SendListener {
+public class ChatContainer extends SciflowareComponentContainer implements inria.smarttools.core.component.Container, test.QueryAnswerListener, test.SendListener, test.UndoListener, test.QueryListener, test.VoisinsListener, test.DisconnectListener, test.ChatListener, test.LogUndoListener, test.InitDataListener, test.LogListener, test.ChatTwoListener, test.ExitListener, test.QueryvoisinsListener, test.ConnectToListener {
    {
       List<MethodCall> methodCalls;
-      methodCalls = calls.get("Queryvoisins");
+      methodCalls = calls.get("queryAnswer");
       if (methodCalls == null) {
          methodCalls = new ArrayList<MethodCall>();
-         calls.put("Queryvoisins", methodCalls);
+         calls.put("queryAnswer", methodCalls);
       }
       methodCalls.add(new MethodCall() {
          public Object call(ContainerProxy expeditor, String expeditorId, String expeditorType, PropertyMap parameters) {
-            ((ChatFacade) facade).ReceiveQueryVoisins(expeditorId, (java.lang.String) parameters.get("parameter"));
+            ((ChatFacade) facade).receiveQueryAnswer(expeditorId, (java.lang.Integer) parameters.get("id"), (java.lang.String) parameters.get("answer"));
+            return null;
+         	}});
+      methodCalls = calls.get("query");
+      if (methodCalls == null) {
+         methodCalls = new ArrayList<MethodCall>();
+         calls.put("query", methodCalls);
+      }
+      methodCalls.add(new MethodCall() {
+         public Object call(ContainerProxy expeditor, String expeditorId, String expeditorType, PropertyMap parameters) {
+            ((ChatFacade) facade).receiveQuery(expeditorId, (java.lang.String) parameters.get("initiator"), (java.lang.Integer) parameters.get("id"), (java.lang.String) parameters.get("request"), (java.lang.Integer) parameters.get("ttl"));
+            return null;
+         	}});
+      methodCalls = calls.get("voisins");
+      if (methodCalls == null) {
+         methodCalls = new ArrayList<MethodCall>();
+         calls.put("voisins", methodCalls);
+      }
+      methodCalls.add(new MethodCall() {
+         public Object call(ContainerProxy expeditor, String expeditorId, String expeditorType, PropertyMap parameters) {
+            ((ChatFacade) facade).getVoisins(expeditorId, (java.util.ArrayList) parameters.get("voisins"));
             return null;
          	}});
       methodCalls = calls.get("disconnect");
@@ -45,16 +65,6 @@ public class ChatContainer extends SciflowareComponentContainer implements inria
             ((ChatFacade) facade).input(expeditorId, (java.lang.String) parameters.get("parameter"));
             return null;
          	}});
-      methodCalls = calls.get("query");
-      if (methodCalls == null) {
-         methodCalls = new ArrayList<MethodCall>();
-         calls.put("query", methodCalls);
-      }
-      methodCalls.add(new MethodCall() {
-         public Object call(ContainerProxy expeditor, String expeditorId, String expeditorType, PropertyMap parameters) {
-            ((ChatFacade) facade).receiveQuery(expeditorId, (java.lang.String) parameters.get("initiator"), (java.lang.Integer) parameters.get("id"), (java.lang.String) parameters.get("request"), (java.lang.Integer) parameters.get("ttl"));
-            return null;
-         	}});
       methodCalls = calls.get("quit");
       if (methodCalls == null) {
          methodCalls = new ArrayList<MethodCall>();
@@ -65,24 +75,24 @@ public class ChatContainer extends SciflowareComponentContainer implements inria
             ((ChatFacade) facade).quit(expeditorId);
             return null;
          	}});
-      methodCalls = calls.get("queryAnswer");
+      methodCalls = calls.get("chatTwo");
       if (methodCalls == null) {
          methodCalls = new ArrayList<MethodCall>();
-         calls.put("queryAnswer", methodCalls);
+         calls.put("chatTwo", methodCalls);
       }
       methodCalls.add(new MethodCall() {
          public Object call(ContainerProxy expeditor, String expeditorId, String expeditorType, PropertyMap parameters) {
-            ((ChatFacade) facade).receiveQueryAnswer(expeditorId, (java.lang.Integer) parameters.get("id"), (java.lang.String) parameters.get("answer"));
+            ((ChatFacade) facade).imageInput(expeditorId, (java.lang.String) parameters.get("imageparameter"));
             return null;
          	}});
-      methodCalls = calls.get("voisins");
+      methodCalls = calls.get("Queryvoisins");
       if (methodCalls == null) {
          methodCalls = new ArrayList<MethodCall>();
-         calls.put("voisins", methodCalls);
+         calls.put("Queryvoisins", methodCalls);
       }
       methodCalls.add(new MethodCall() {
          public Object call(ContainerProxy expeditor, String expeditorId, String expeditorType, PropertyMap parameters) {
-            ((ChatFacade) facade).getVoisins(expeditorId, (java.util.ArrayList) parameters.get("voisins"));
+            ((ChatFacade) facade).ReceiveQueryVoisins(expeditorId, (java.lang.String) parameters.get("parameter"));
             return null;
          	}});
       methodCalls = calls.get("shutdown");
@@ -140,27 +150,60 @@ public class ChatContainer extends SciflowareComponentContainer implements inria
     **/
    protected  void initFacadeListeners(){
       super.initFacadeListeners();
-      ((ChatFacadeInterface) facade).addQueryvoisinsListener(this);
+      ((ChatFacadeInterface) facade).addQueryAnswerListener(this);
+      ((ChatFacadeInterface) facade).addSendListener(this);
+      ((ChatFacadeInterface) facade).addUndoListener(this);
+      ((ChatFacadeInterface) facade).addQueryListener(this);
+      ((ChatFacadeInterface) facade).addVoisinsListener(this);
       ((ChatFacadeInterface) facade).addDisconnectListener(this);
+      ((ChatFacadeInterface) facade).addChatListener(this);
+      ((ChatFacadeInterface) facade).addLogUndoListener(this);
       ((ChatFacadeInterface) facade).addInitDataListener(this);
       ((ChatFacadeInterface) facade).addLogListener(this);
-      ((ChatFacadeInterface) facade).addQueryListener(this);
-      ((ChatFacadeInterface) facade).addQueryAnswerListener(this);
-      ((ChatFacadeInterface) facade).addVoisinsListener(this);
+      ((ChatFacadeInterface) facade).addChatTwoListener(this);
       ((ChatFacadeInterface) facade).addExitListener(this);
-      ((ChatFacadeInterface) facade).addUndoListener(this);
-      ((ChatFacadeInterface) facade).addLogUndoListener(this);
-      ((ChatFacadeInterface) facade).addChatListener(this);
+      ((ChatFacadeInterface) facade).addQueryvoisinsListener(this);
       ((ChatFacadeInterface) facade).addConnectToListener(this);
-      ((ChatFacadeInterface) facade).addSendListener(this);
    }
 
    /**
-    * QueryvoisinsListener
+    * QueryAnswerListener
     * @throws IllegalStateException to absolutely care in business methods
     **/
-   public  void SendQueryVoisins(QueryvoisinsEvent e){
-      send(new MessageImpl("Queryvoisins", e.getAttributes() , null, e.getAdressee()));
+   public  void sendQueryAnswer(QueryAnswerEvent e){
+      send(new MessageImpl("queryAnswer", e.getAttributes() , null, e.getAdressee()));
+   }
+
+   /**
+    * SendListener
+    * @throws IllegalStateException to absolutely care in business methods
+    **/
+   public  void send(SendEvent e){
+      send(new MessageImpl("send", e.getAttributes() , null, e.getAdressee()));
+   }
+
+   /**
+    * UndoListener
+    * @throws IllegalStateException to absolutely care in business methods
+    **/
+   public  void undo(UndoEvent e){
+      send(new MessageImpl("undo", e.getAttributes() , null, e.getAdressee()));
+   }
+
+   /**
+    * QueryListener
+    * @throws IllegalStateException to absolutely care in business methods
+    **/
+   public  void sendQuery(QueryEvent e){
+      send(new MessageImpl("query", e.getAttributes() , null, e.getAdressee()));
+   }
+
+   /**
+    * VoisinsListener
+    * @throws IllegalStateException to absolutely care in business methods
+    **/
+   public  void sendVoisins(VoisinsEvent e){
+      send(new MessageImpl("voisins", e.getAttributes() , null, e.getAdressee()));
    }
 
    /**
@@ -169,6 +212,22 @@ public class ChatContainer extends SciflowareComponentContainer implements inria
     **/
    public  void disconnectOut(DisconnectEvent e){
       send(new MessageImpl("disconnect", e.getAttributes() , null, e.getAdressee()));
+   }
+
+   /**
+    * ChatListener
+    * @throws IllegalStateException to absolutely care in business methods
+    **/
+   public  void output(ChatEvent e){
+      send(new MessageImpl("chat", e.getAttributes() , null, e.getAdressee()));
+   }
+
+   /**
+    * LogUndoListener
+    * @throws IllegalStateException to absolutely care in business methods
+    **/
+   public  void logUndo(LogUndoEvent e){
+      send(new MessageImpl("logUndo", e.getAttributes() , null, e.getAdressee()));
    }
 
    /**
@@ -188,27 +247,11 @@ public class ChatContainer extends SciflowareComponentContainer implements inria
    }
 
    /**
-    * QueryListener
+    * ChatTwoListener
     * @throws IllegalStateException to absolutely care in business methods
     **/
-   public  void sendQuery(QueryEvent e){
-      send(new MessageImpl("query", e.getAttributes() , null, e.getAdressee()));
-   }
-
-   /**
-    * QueryAnswerListener
-    * @throws IllegalStateException to absolutely care in business methods
-    **/
-   public  void sendQueryAnswer(QueryAnswerEvent e){
-      send(new MessageImpl("queryAnswer", e.getAttributes() , null, e.getAdressee()));
-   }
-
-   /**
-    * VoisinsListener
-    * @throws IllegalStateException to absolutely care in business methods
-    **/
-   public  void sendVoisins(VoisinsEvent e){
-      send(new MessageImpl("voisins", e.getAttributes() , null, e.getAdressee()));
+   public  void imageOutput(ChatTwoEvent e){
+      send(new MessageImpl("chatTwo", e.getAttributes() , null, e.getAdressee()));
    }
 
    /**
@@ -220,27 +263,11 @@ public class ChatContainer extends SciflowareComponentContainer implements inria
    }
 
    /**
-    * UndoListener
+    * QueryvoisinsListener
     * @throws IllegalStateException to absolutely care in business methods
     **/
-   public  void undo(UndoEvent e){
-      send(new MessageImpl("undo", e.getAttributes() , null, e.getAdressee()));
-   }
-
-   /**
-    * LogUndoListener
-    * @throws IllegalStateException to absolutely care in business methods
-    **/
-   public  void logUndo(LogUndoEvent e){
-      send(new MessageImpl("logUndo", e.getAttributes() , null, e.getAdressee()));
-   }
-
-   /**
-    * ChatListener
-    * @throws IllegalStateException to absolutely care in business methods
-    **/
-   public  void output(ChatEvent e){
-      send(new MessageImpl("chat", e.getAttributes() , null, e.getAdressee()));
+   public  void SendQueryVoisins(QueryvoisinsEvent e){
+      send(new MessageImpl("Queryvoisins", e.getAttributes() , null, e.getAdressee()));
    }
 
    /**
@@ -249,14 +276,6 @@ public class ChatContainer extends SciflowareComponentContainer implements inria
     **/
    public  void connectTo(ConnectToEvent e){
       send(new MessageImpl("connectTo", e.getAttributes() , null, e.getAdressee()));
-   }
-
-   /**
-    * SendListener
-    * @throws IllegalStateException to absolutely care in business methods
-    **/
-   public  void send(SendEvent e){
-      send(new MessageImpl("send", e.getAttributes() , null, e.getAdressee()));
    }
 
    /**

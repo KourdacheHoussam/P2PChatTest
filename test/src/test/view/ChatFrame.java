@@ -35,6 +35,8 @@ public class ChatFrame extends JFrame implements IChatView {
 	private JLabel label2;
 
 	private JTextArea messagesTA;
+
+	/** ---------------------------------------------------------------------- **/
 	
 	public ChatFrame(Chat chatComponent) {
 		//super(chatComponent.getIdName());
@@ -44,19 +46,20 @@ public class ChatFrame extends JFrame implements IChatView {
 		chat = chatComponent;
 		
 		setTitle(chat.getIdName());
-		setSize(800, 600);
+		setSize(1400, 300);
 		getContentPane().setLayout(new BorderLayout(0, 0));
 		
 		messagesTA = new JTextArea();
 		getContentPane().add(messagesTA, BorderLayout.CENTER);
 		
 		JPanel panel = new JPanel();
-		panel.setSize(800, 100);
+		panel.setSize(600, 100);
 		getContentPane().add(panel, BorderLayout.SOUTH);
 		panel.setLayout(new BorderLayout(0, 0));
 		
 		JPanel friend = new JPanel();
 		panel.add(friend, BorderLayout.WEST);
+		
 		friendsCB = new JComboBox();
 		friend.add(friendsCB, BorderLayout.WEST);
 		
@@ -84,6 +87,24 @@ public class ChatFrame extends JFrame implements IChatView {
 			}
 		});
 		
+		/**
+		 * --------------------------------------------------------------
+		 * ------------------- Deuxième Send ----------------------------
+		 * --------------------------------------------------------------
+		 */
+		
+		JButton second_sendMessage=new JButton("ReSend");
+		second_sendMessage.addActionListener(new ActionListener() {			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String friend=friendsCB.getSelectedItem().toString();
+				chat.sendQuery(friend, chat.getIdName(), id+1, messageTF.getText(), ttl);
+				chat.addID(id+1);
+				id++;
+			}
+		});
+		
+		/** --------------------------------------------------------------*/
 		JButton sendQuery = new JButton("Recherche");
 		sendQuery.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -104,8 +125,8 @@ public class ChatFrame extends JFrame implements IChatView {
 		
 		/*** **** **** **** ***** **** **** *****/
 		
-		JButton ReSend=new JButton("Resend");
-		ReSend.addActionListener(new ActionListener() {
+		JButton sendImage=new JButton("SendImage");
+		sendImage.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -120,6 +141,7 @@ public class ChatFrame extends JFrame implements IChatView {
 		
 		
 		buttons.add(sendMessage, BorderLayout.WEST);
+		buttons.add(sendImage, BorderLayout.EAST);
 		buttons.add(Connect, BorderLayout.EAST);
 		buttons.add(sendQuery, BorderLayout.CENTER);
 		
@@ -129,20 +151,32 @@ public class ChatFrame extends JFrame implements IChatView {
 		System.out.println(" panel ");
 	}
 
+
+	/** ---------------------------------------------------------------------- **/
+	
 	public void addNeighbour(String name) {
 		friendsCB.addItem(name);
 	}	
 
+
+	/** ---------------------------------------------------------------------- **/
+	
+	
 	public void messageArrived(String expeditor, String message) {
 		messagesTA.append(expeditor + " -> " + message + "\n");
 	
 	}
+
+	/** ---------------------------------------------------------------------- **/
+	
 	
 	public void query(String expeditor, String message) {
 		messagesTA.append(expeditor + " -> " + message + "\n");
 	
 	}
 
+	/** ---------------------------------------------------------------------- **/
+	
 	public void QueryArrived(String expeditor, String initiator, Integer id,
 			String request, Integer ttl) {
 		// pour tests
@@ -150,14 +184,22 @@ public class ChatFrame extends JFrame implements IChatView {
 		
 	}
 
+	/** ---------------------------------------------------------------------- **/
+	
 	public void msg(String string) {
 		messagesTA.append(string+"\n");
 		
 	}
 	
+
+	/** ---------------------------------------------------------------------- **/
+	
 	public void setID(Integer newid) {
 		this.id=newid;
 	}
+
+	/** ---------------------------------------------------------------------- **/
+	
 	
 	public void addConnu(List<String> voisinsConnus){
 		//friendsCB1.removeAllItems();
@@ -166,7 +208,10 @@ public class ChatFrame extends JFrame implements IChatView {
 		//friendsCB1.addItem(voisinsConnus);
 		
 	}
+	
 
+	/** ---------------------------------------------------------------------- **/
+	
 	public ArrayList<String> getNeighbours() {
 		// Retourne la liste des voisins
 		ArrayList<String> voisins=new ArrayList<String>();
@@ -179,6 +224,8 @@ public class ChatFrame extends JFrame implements IChatView {
 		return voisins;
 	}
 
+	/** ---------------------------------------------------------------------- **/
+	
 	public void SearchNewNeighbours() {
 		// Envoie une query des nouveaux voisins a chaque voisin
 		ArrayList<String> friends=getNeighbours();

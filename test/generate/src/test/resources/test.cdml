@@ -12,22 +12,48 @@
 		<attribute name="parameter" javatype="java.lang.String"/>
 	</output>
 	
+
+
+	
+	<input name="chatTwo" method="imageInput">
+		<attribute name="imageparameter" javatype="java.lang.String"/>
+	</input>
+	
+	<output name="chatTwo" method="imageOutput">
+		<attribute name="imageparameter" javatype="java.lang.String"/>
+	</output>
+	
+	
+	
+	
+	<!-- JE RECOIS LE GOSSIP  --> 
+	<!--  """""  1 """"" -->
 	<input name="Queryvoisins" method="ReceiveQueryVoisins">
 		<attribute name="parameter" javatype="java.lang.String"/>
 	</input>
 
+	<!--J ENVOIE LE GOSSIP -->
+	
 	<output name="Queryvoisins" method="SendQueryVoisins">
 		<attribute name="parameter" javatype="java.lang.String"/>
 	</output>
+		
+	<!--  """""  2 """"" -->
 	
 	<input name="voisins" method="getVoisins">
 		<attribute name="voisins" javatype="java.util.ArrayList"/>
 	</input>
 
+	<!-- LE RECEPTEUR DU GOSSIP DECIDE OU PAS DE LE RENVOYER AUX VOISINS À L'AIDE -->
+	<!--   DE LA METHODE sendVoisins() -->
 	<output name="voisins" method="sendVoisins">
 		<attribute name="voisins" javatype="java.util.ArrayList"/>
 	</output>
 	
+	
+	
+	<!--  " C'est la m�thode qu'il faut impl�menter -->
+	<!--  """""  4 """"" -->
 	<input name="query" method="receiveQuery">
 		<attribute name="initiator" javatype="java.lang.String"/>
 		<attribute name="id" javatype="java.lang.Integer"/>
@@ -35,25 +61,27 @@
 		<attribute name="ttl" javatype="java.lang.Integer"/>
 	</input>
 
+	<!--  """""  5 """"" -->
 	<output name="query" method="sendQuery">
 		<attribute name="initiator" javatype="java.lang.String"/>
 		<attribute name="id" javatype="java.lang.Integer"/>
 		<attribute name="request" javatype="java.lang.String"/>
 		<attribute name="ttl" javatype="java.lang.Integer"/>
 	</output>
-
+	
+	
+	<!--  """""  6 """"" -->
 	<input name="queryAnswer" method="receiveQueryAnswer">
 		<attribute name="id" javatype="java.lang.Integer"/>
 		<attribute name="answer" javatype="java.lang.String"/>
 	</input>
-
+	
+	<!--  """""  7 """"" -->
 	<output name="queryAnswer" method="sendQueryAnswer">
 		<attribute name="id" javatype="java.lang.Integer"/>
 		<attribute name="answer" javatype="java.lang.String"/>
 	</output>
 
-<!--c'est ici qu'il faut ajouter les services:  -->
-
-<!-- dans buildST: faut faire un run pour générer les services-->
+	<!-- dans buildST: faut faire un run pour générer les services-->
 
 </component>

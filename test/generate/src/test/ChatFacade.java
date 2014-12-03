@@ -13,15 +13,45 @@ public class ChatFacade extends Chat implements ChatFacadeInterface {
    //
 
    /**
-    * Queryvoisins
+    * queryAnswer
     * null
     **/
-   protected Vector<QueryvoisinsListener> QueryvoisinsListeners = new Vector<QueryvoisinsListener>();
+   protected Vector<QueryAnswerListener> queryAnswerListeners = new Vector<QueryAnswerListener>();
+   /**
+    * send
+    * 
+    **/
+   protected Vector<SendListener> sendListeners = new Vector<SendListener>();
+   /**
+    * undo
+    * 
+    **/
+   protected Vector<UndoListener> undoListeners = new Vector<UndoListener>();
+   /**
+    * query
+    * null
+    **/
+   protected Vector<QueryListener> queryListeners = new Vector<QueryListener>();
+   /**
+    * voisins
+    * null
+    **/
+   protected Vector<VoisinsListener> voisinsListeners = new Vector<VoisinsListener>();
    /**
     * disconnect
     * 
     **/
    protected Vector<DisconnectListener> disconnectListeners = new Vector<DisconnectListener>();
+   /**
+    * chat
+    * null
+    **/
+   protected Vector<ChatListener> chatListeners = new Vector<ChatListener>();
+   /**
+    * logUndo
+    * 
+    **/
+   protected Vector<LogUndoListener> logUndoListeners = new Vector<LogUndoListener>();
    /**
     * initData
     * 
@@ -33,50 +63,25 @@ public class ChatFacade extends Chat implements ChatFacadeInterface {
     **/
    protected Vector<LogListener> logListeners = new Vector<LogListener>();
    /**
-    * query
+    * chatTwo
     * null
     **/
-   protected Vector<QueryListener> queryListeners = new Vector<QueryListener>();
-   /**
-    * queryAnswer
-    * null
-    **/
-   protected Vector<QueryAnswerListener> queryAnswerListeners = new Vector<QueryAnswerListener>();
-   /**
-    * voisins
-    * null
-    **/
-   protected Vector<VoisinsListener> voisinsListeners = new Vector<VoisinsListener>();
+   protected Vector<ChatTwoListener> chatTwoListeners = new Vector<ChatTwoListener>();
    /**
     * exit
     * 
     **/
    protected Vector<ExitListener> exitListeners = new Vector<ExitListener>();
    /**
-    * undo
-    * 
-    **/
-   protected Vector<UndoListener> undoListeners = new Vector<UndoListener>();
-   /**
-    * logUndo
-    * 
-    **/
-   protected Vector<LogUndoListener> logUndoListeners = new Vector<LogUndoListener>();
-   /**
-    * chat
+    * Queryvoisins
     * null
     **/
-   protected Vector<ChatListener> chatListeners = new Vector<ChatListener>();
+   protected Vector<QueryvoisinsListener> QueryvoisinsListeners = new Vector<QueryvoisinsListener>();
    /**
     * connectTo
     * 
     **/
    protected Vector<ConnectToListener> connectToListeners = new Vector<ConnectToListener>();
-   /**
-    * send
-    * 
-    **/
-   protected Vector<SendListener> sendListeners = new Vector<SendListener>();
    /**
     **/
    private String idName;
@@ -121,12 +126,30 @@ public class ChatFacade extends Chat implements ChatFacadeInterface {
    }
 
    /**
-    * Queryvoisins
+    * queryAnswer
     * null
     * @param expeditor is the component name who sent this message
     **/
-   public  void ReceiveQueryVoisins(String expeditor, java.lang.String parameter){
-      super.ReceiveQueryVoisins(expeditor, parameter);
+   public  void receiveQueryAnswer(String expeditor, java.lang.Integer id, java.lang.String answer){
+      super.receiveQueryAnswer(expeditor, id, answer);
+   }
+
+   /**
+    * query
+    * null
+    * @param expeditor is the component name who sent this message
+    **/
+   public  void receiveQuery(String expeditor, java.lang.String initiator, java.lang.Integer id, java.lang.String request, java.lang.Integer ttl){
+      super.receiveQuery(expeditor, initiator, id, request, ttl);
+   }
+
+   /**
+    * voisins
+    * null
+    * @param expeditor is the component name who sent this message
+    **/
+   public  void getVoisins(String expeditor, java.util.ArrayList voisins){
+      super.getVoisins(expeditor, voisins);
    }
 
    /**
@@ -148,15 +171,6 @@ public class ChatFacade extends Chat implements ChatFacadeInterface {
    }
 
    /**
-    * query
-    * null
-    * @param expeditor is the component name who sent this message
-    **/
-   public  void receiveQuery(String expeditor, java.lang.String initiator, java.lang.Integer id, java.lang.String request, java.lang.Integer ttl){
-      super.receiveQuery(expeditor, initiator, id, request, ttl);
-   }
-
-   /**
     * quit
     * quit
     * @param expeditor is the component name who sent this message
@@ -166,21 +180,21 @@ public class ChatFacade extends Chat implements ChatFacadeInterface {
    }
 
    /**
-    * queryAnswer
+    * chatTwo
     * null
     * @param expeditor is the component name who sent this message
     **/
-   public  void receiveQueryAnswer(String expeditor, java.lang.Integer id, java.lang.String answer){
-      super.receiveQueryAnswer(expeditor, id, answer);
+   public  void imageInput(String expeditor, java.lang.String imageparameter){
+      super.imageInput(expeditor, imageparameter);
    }
 
    /**
-    * voisins
+    * Queryvoisins
     * null
     * @param expeditor is the component name who sent this message
     **/
-   public  void getVoisins(String expeditor, java.util.ArrayList voisins){
-      super.getVoisins(expeditor, voisins);
+   public  void ReceiveQueryVoisins(String expeditor, java.lang.String parameter){
+      super.ReceiveQueryVoisins(expeditor, parameter);
    }
 
    /**
@@ -202,27 +216,129 @@ public class ChatFacade extends Chat implements ChatFacadeInterface {
    }
 
    /**
-    * Queryvoisins
+    * queryAnswer
     * null
     * @param ev a <code>Object</code> value : data
     **/
-   public  void SendQueryVoisins(java.lang.String parameter){
-      SendQueryVoisins(null, parameter);
+   public  void sendQueryAnswer(java.lang.Integer id, java.lang.String answer){
+      sendQueryAnswer(null, id, answer);
    }
 
    /**
-    * Queryvoisins
+    * queryAnswer
     * null
     * @param adressee component name, which will receive this message
     * @param ev a <code>Object</code> value : data
     **/
-   public  void SendQueryVoisins(String adressee, java.lang.String parameter){
+   public  void sendQueryAnswer(String adressee, java.lang.Integer id, java.lang.String answer){
       PropertyMap args = new PropertyMap();
-      args.put("parameter",parameter);
-      QueryvoisinsEvent ev =  new QueryvoisinsEvent(adressee, parameter);
+      args.put("id",id);
+      args.put("answer",answer);
+      QueryAnswerEvent ev =  new QueryAnswerEvent(adressee, id, answer);
       ev.setAttributes(args);
-      for(int i = 0 ; i < QueryvoisinsListeners.size() ; i++)
-      (( QueryvoisinsListener ) QueryvoisinsListeners.elementAt(i)).SendQueryVoisins(ev);
+      for(int i = 0 ; i < queryAnswerListeners.size() ; i++)
+      (( QueryAnswerListener ) queryAnswerListeners.elementAt(i)).sendQueryAnswer(ev);
+   }
+
+   /**
+    * send
+    * 
+    * @param ev a <code>Object</code> value : data
+    **/
+   public  void send(java.lang.String messageName, java.lang.String messageExpeditor){
+      send(null, messageName, messageExpeditor);
+   }
+
+   /**
+    * send
+    * 
+    * @param adressee component name, which will receive this message
+    * @param ev a <code>Object</code> value : data
+    **/
+   public  void send(String adressee, java.lang.String messageName, java.lang.String messageExpeditor){
+      PropertyMap args = new PropertyMap();
+      args.put("messageName",messageName);
+      args.put("messageExpeditor",messageExpeditor);
+      SendEvent ev =  new SendEvent(adressee, messageName, messageExpeditor);
+      ev.setAttributes(args);
+      for(int i = 0 ; i < sendListeners.size() ; i++)
+      (( SendListener ) sendListeners.elementAt(i)).send(ev);
+   }
+
+   /**
+    * undo
+    * 
+    * @param ev a <code>Object</code> value : data
+    **/
+   public  void undo(java.lang.String message, java.lang.String receiver){
+      undo(null, message, receiver);
+   }
+
+   /**
+    * undo
+    * 
+    * @param adressee component name, which will receive this message
+    * @param ev a <code>Object</code> value : data
+    **/
+   public  void undo(String adressee, java.lang.String message, java.lang.String receiver){
+      PropertyMap args = new PropertyMap();
+      args.put("message",message);
+      args.put("receiver",receiver);
+      UndoEvent ev =  new UndoEvent(adressee, message, receiver);
+      ev.setAttributes(args);
+      for(int i = 0 ; i < undoListeners.size() ; i++)
+      (( UndoListener ) undoListeners.elementAt(i)).undo(ev);
+   }
+
+   /**
+    * query
+    * null
+    * @param ev a <code>Object</code> value : data
+    **/
+   public  void sendQuery(java.lang.String initiator, java.lang.Integer id, java.lang.String request, java.lang.Integer ttl){
+      sendQuery(null, initiator, id, request, ttl);
+   }
+
+   /**
+    * query
+    * null
+    * @param adressee component name, which will receive this message
+    * @param ev a <code>Object</code> value : data
+    **/
+   public  void sendQuery(String adressee, java.lang.String initiator, java.lang.Integer id, java.lang.String request, java.lang.Integer ttl){
+      PropertyMap args = new PropertyMap();
+      args.put("initiator",initiator);
+      args.put("id",id);
+      args.put("request",request);
+      args.put("ttl",ttl);
+      QueryEvent ev =  new QueryEvent(adressee, initiator, id, request, ttl);
+      ev.setAttributes(args);
+      for(int i = 0 ; i < queryListeners.size() ; i++)
+      (( QueryListener ) queryListeners.elementAt(i)).sendQuery(ev);
+   }
+
+   /**
+    * voisins
+    * null
+    * @param ev a <code>Object</code> value : data
+    **/
+   public  void sendVoisins(java.util.ArrayList voisins){
+      sendVoisins(null, voisins);
+   }
+
+   /**
+    * voisins
+    * null
+    * @param adressee component name, which will receive this message
+    * @param ev a <code>Object</code> value : data
+    **/
+   public  void sendVoisins(String adressee, java.util.ArrayList voisins){
+      PropertyMap args = new PropertyMap();
+      args.put("voisins",voisins);
+      VoisinsEvent ev =  new VoisinsEvent(adressee, voisins);
+      ev.setAttributes(args);
+      for(int i = 0 ; i < voisinsListeners.size() ; i++)
+      (( VoisinsListener ) voisinsListeners.elementAt(i)).sendVoisins(ev);
    }
 
    /**
@@ -246,6 +362,55 @@ public class ChatFacade extends Chat implements ChatFacadeInterface {
       ev.setAttributes(args);
       for(int i = 0 ; i < disconnectListeners.size() ; i++)
       (( DisconnectListener ) disconnectListeners.elementAt(i)).disconnectOut(ev);
+   }
+
+   /**
+    * chat
+    * null
+    * @param ev a <code>Object</code> value : data
+    **/
+   public  void output(java.lang.String parameter){
+      output(null, parameter);
+   }
+
+   /**
+    * chat
+    * null
+    * @param adressee component name, which will receive this message
+    * @param ev a <code>Object</code> value : data
+    **/
+   public  void output(String adressee, java.lang.String parameter){
+      PropertyMap args = new PropertyMap();
+      args.put("parameter",parameter);
+      ChatEvent ev =  new ChatEvent(adressee, parameter);
+      ev.setAttributes(args);
+      for(int i = 0 ; i < chatListeners.size() ; i++)
+      (( ChatListener ) chatListeners.elementAt(i)).output(ev);
+   }
+
+   /**
+    * logUndo
+    * 
+    * @param ev a <code>Object</code> value : data
+    **/
+   public  void logUndo(java.lang.String message, java.lang.String receiver){
+      logUndo(null, message, receiver);
+   }
+
+   /**
+    * logUndo
+    * 
+    * @param adressee component name, which will receive this message
+    * @param ev a <code>Object</code> value : data
+    **/
+   public  void logUndo(String adressee, java.lang.String message, java.lang.String receiver){
+      PropertyMap args = new PropertyMap();
+      args.put("message",message);
+      args.put("receiver",receiver);
+      LogUndoEvent ev =  new LogUndoEvent(adressee, message, receiver);
+      ev.setAttributes(args);
+      for(int i = 0 ; i < logUndoListeners.size() ; i++)
+      (( LogUndoListener ) logUndoListeners.elementAt(i)).logUndo(ev);
    }
 
    /**
@@ -297,79 +462,27 @@ public class ChatFacade extends Chat implements ChatFacadeInterface {
    }
 
    /**
-    * query
+    * chatTwo
     * null
     * @param ev a <code>Object</code> value : data
     **/
-   public  void sendQuery(java.lang.String initiator, java.lang.Integer id, java.lang.String request, java.lang.Integer ttl){
-      sendQuery(null, initiator, id, request, ttl);
+   public  void imageOutput(java.lang.String imageparameter){
+      imageOutput(null, imageparameter);
    }
 
    /**
-    * query
+    * chatTwo
     * null
     * @param adressee component name, which will receive this message
     * @param ev a <code>Object</code> value : data
     **/
-   public  void sendQuery(String adressee, java.lang.String initiator, java.lang.Integer id, java.lang.String request, java.lang.Integer ttl){
+   public  void imageOutput(String adressee, java.lang.String imageparameter){
       PropertyMap args = new PropertyMap();
-      args.put("initiator",initiator);
-      args.put("id",id);
-      args.put("request",request);
-      args.put("ttl",ttl);
-      QueryEvent ev =  new QueryEvent(adressee, initiator, id, request, ttl);
+      args.put("imageparameter",imageparameter);
+      ChatTwoEvent ev =  new ChatTwoEvent(adressee, imageparameter);
       ev.setAttributes(args);
-      for(int i = 0 ; i < queryListeners.size() ; i++)
-      (( QueryListener ) queryListeners.elementAt(i)).sendQuery(ev);
-   }
-
-   /**
-    * queryAnswer
-    * null
-    * @param ev a <code>Object</code> value : data
-    **/
-   public  void sendQueryAnswer(java.lang.Integer id, java.lang.String answer){
-      sendQueryAnswer(null, id, answer);
-   }
-
-   /**
-    * queryAnswer
-    * null
-    * @param adressee component name, which will receive this message
-    * @param ev a <code>Object</code> value : data
-    **/
-   public  void sendQueryAnswer(String adressee, java.lang.Integer id, java.lang.String answer){
-      PropertyMap args = new PropertyMap();
-      args.put("id",id);
-      args.put("answer",answer);
-      QueryAnswerEvent ev =  new QueryAnswerEvent(adressee, id, answer);
-      ev.setAttributes(args);
-      for(int i = 0 ; i < queryAnswerListeners.size() ; i++)
-      (( QueryAnswerListener ) queryAnswerListeners.elementAt(i)).sendQueryAnswer(ev);
-   }
-
-   /**
-    * voisins
-    * null
-    * @param ev a <code>Object</code> value : data
-    **/
-   public  void sendVoisins(java.util.ArrayList voisins){
-      sendVoisins(null, voisins);
-   }
-
-   /**
-    * voisins
-    * null
-    * @param adressee component name, which will receive this message
-    * @param ev a <code>Object</code> value : data
-    **/
-   public  void sendVoisins(String adressee, java.util.ArrayList voisins){
-      PropertyMap args = new PropertyMap();
-      args.put("voisins",voisins);
-      VoisinsEvent ev =  new VoisinsEvent(adressee, voisins);
-      ev.setAttributes(args);
-      for(int i = 0 ; i < voisinsListeners.size() ; i++)
-      (( VoisinsListener ) voisinsListeners.elementAt(i)).sendVoisins(ev);
+      for(int i = 0 ; i < chatTwoListeners.size() ; i++)
+      (( ChatTwoListener ) chatTwoListeners.elementAt(i)).imageOutput(ev);
    }
 
    /**
@@ -396,77 +509,27 @@ public class ChatFacade extends Chat implements ChatFacadeInterface {
    }
 
    /**
-    * undo
-    * 
-    * @param ev a <code>Object</code> value : data
-    **/
-   public  void undo(java.lang.String message, java.lang.String receiver){
-      undo(null, message, receiver);
-   }
-
-   /**
-    * undo
-    * 
-    * @param adressee component name, which will receive this message
-    * @param ev a <code>Object</code> value : data
-    **/
-   public  void undo(String adressee, java.lang.String message, java.lang.String receiver){
-      PropertyMap args = new PropertyMap();
-      args.put("message",message);
-      args.put("receiver",receiver);
-      UndoEvent ev =  new UndoEvent(adressee, message, receiver);
-      ev.setAttributes(args);
-      for(int i = 0 ; i < undoListeners.size() ; i++)
-      (( UndoListener ) undoListeners.elementAt(i)).undo(ev);
-   }
-
-   /**
-    * logUndo
-    * 
-    * @param ev a <code>Object</code> value : data
-    **/
-   public  void logUndo(java.lang.String message, java.lang.String receiver){
-      logUndo(null, message, receiver);
-   }
-
-   /**
-    * logUndo
-    * 
-    * @param adressee component name, which will receive this message
-    * @param ev a <code>Object</code> value : data
-    **/
-   public  void logUndo(String adressee, java.lang.String message, java.lang.String receiver){
-      PropertyMap args = new PropertyMap();
-      args.put("message",message);
-      args.put("receiver",receiver);
-      LogUndoEvent ev =  new LogUndoEvent(adressee, message, receiver);
-      ev.setAttributes(args);
-      for(int i = 0 ; i < logUndoListeners.size() ; i++)
-      (( LogUndoListener ) logUndoListeners.elementAt(i)).logUndo(ev);
-   }
-
-   /**
-    * chat
+    * Queryvoisins
     * null
     * @param ev a <code>Object</code> value : data
     **/
-   public  void output(java.lang.String parameter){
-      output(null, parameter);
+   public  void SendQueryVoisins(java.lang.String parameter){
+      SendQueryVoisins(null, parameter);
    }
 
    /**
-    * chat
+    * Queryvoisins
     * null
     * @param adressee component name, which will receive this message
     * @param ev a <code>Object</code> value : data
     **/
-   public  void output(String adressee, java.lang.String parameter){
+   public  void SendQueryVoisins(String adressee, java.lang.String parameter){
       PropertyMap args = new PropertyMap();
       args.put("parameter",parameter);
-      ChatEvent ev =  new ChatEvent(adressee, parameter);
+      QueryvoisinsEvent ev =  new QueryvoisinsEvent(adressee, parameter);
       ev.setAttributes(args);
-      for(int i = 0 ; i < chatListeners.size() ; i++)
-      (( ChatListener ) chatListeners.elementAt(i)).output(ev);
+      for(int i = 0 ; i < QueryvoisinsListeners.size() ; i++)
+      (( QueryvoisinsListener ) QueryvoisinsListeners.elementAt(i)).SendQueryVoisins(ev);
    }
 
    /**
@@ -500,44 +563,83 @@ public class ChatFacade extends Chat implements ChatFacadeInterface {
    }
 
    /**
-    * send
-    * 
-    * @param ev a <code>Object</code> value : data
-    **/
-   public  void send(java.lang.String messageName, java.lang.String messageExpeditor){
-      send(null, messageName, messageExpeditor);
-   }
-
-   /**
-    * send
-    * 
-    * @param adressee component name, which will receive this message
-    * @param ev a <code>Object</code> value : data
-    **/
-   public  void send(String adressee, java.lang.String messageName, java.lang.String messageExpeditor){
-      PropertyMap args = new PropertyMap();
-      args.put("messageName",messageName);
-      args.put("messageExpeditor",messageExpeditor);
-      SendEvent ev =  new SendEvent(adressee, messageName, messageExpeditor);
-      ev.setAttributes(args);
-      for(int i = 0 ; i < sendListeners.size() ; i++)
-      (( SendListener ) sendListeners.elementAt(i)).send(ev);
-   }
-
-   /**
-    * Queryvoisins
+    * queryAnswer
     * null
     **/
-   public  void addQueryvoisinsListener(QueryvoisinsListener data){
-      QueryvoisinsListeners.add(data);
+   public  void addQueryAnswerListener(QueryAnswerListener data){
+      queryAnswerListeners.add(data);
    }
 
    /**
-    * Queryvoisins
+    * queryAnswer
     * null
     **/
-   public  void removeQueryvoisinsListener(QueryvoisinsListener data){
-      QueryvoisinsListeners.remove(data);
+   public  void removeQueryAnswerListener(QueryAnswerListener data){
+      queryAnswerListeners.remove(data);
+   }
+
+   /**
+    * send
+    * 
+    **/
+   public  void addSendListener(SendListener data){
+      sendListeners.add(data);
+   }
+
+   /**
+    * send
+    * 
+    **/
+   public  void removeSendListener(SendListener data){
+      sendListeners.remove(data);
+   }
+
+   /**
+    * undo
+    * 
+    **/
+   public  void addUndoListener(UndoListener data){
+      undoListeners.add(data);
+   }
+
+   /**
+    * undo
+    * 
+    **/
+   public  void removeUndoListener(UndoListener data){
+      undoListeners.remove(data);
+   }
+
+   /**
+    * query
+    * null
+    **/
+   public  void addQueryListener(QueryListener data){
+      queryListeners.add(data);
+   }
+
+   /**
+    * query
+    * null
+    **/
+   public  void removeQueryListener(QueryListener data){
+      queryListeners.remove(data);
+   }
+
+   /**
+    * voisins
+    * null
+    **/
+   public  void addVoisinsListener(VoisinsListener data){
+      voisinsListeners.add(data);
+   }
+
+   /**
+    * voisins
+    * null
+    **/
+   public  void removeVoisinsListener(VoisinsListener data){
+      voisinsListeners.remove(data);
    }
 
    /**
@@ -554,6 +656,38 @@ public class ChatFacade extends Chat implements ChatFacadeInterface {
     **/
    public  void removeDisconnectListener(DisconnectListener data){
       disconnectListeners.remove(data);
+   }
+
+   /**
+    * chat
+    * null
+    **/
+   public  void addChatListener(ChatListener data){
+      chatListeners.add(data);
+   }
+
+   /**
+    * chat
+    * null
+    **/
+   public  void removeChatListener(ChatListener data){
+      chatListeners.remove(data);
+   }
+
+   /**
+    * logUndo
+    * 
+    **/
+   public  void addLogUndoListener(LogUndoListener data){
+      logUndoListeners.add(data);
+   }
+
+   /**
+    * logUndo
+    * 
+    **/
+   public  void removeLogUndoListener(LogUndoListener data){
+      logUndoListeners.remove(data);
    }
 
    /**
@@ -589,51 +723,19 @@ public class ChatFacade extends Chat implements ChatFacadeInterface {
    }
 
    /**
-    * query
+    * chatTwo
     * null
     **/
-   public  void addQueryListener(QueryListener data){
-      queryListeners.add(data);
+   public  void addChatTwoListener(ChatTwoListener data){
+      chatTwoListeners.add(data);
    }
 
    /**
-    * query
+    * chatTwo
     * null
     **/
-   public  void removeQueryListener(QueryListener data){
-      queryListeners.remove(data);
-   }
-
-   /**
-    * queryAnswer
-    * null
-    **/
-   public  void addQueryAnswerListener(QueryAnswerListener data){
-      queryAnswerListeners.add(data);
-   }
-
-   /**
-    * queryAnswer
-    * null
-    **/
-   public  void removeQueryAnswerListener(QueryAnswerListener data){
-      queryAnswerListeners.remove(data);
-   }
-
-   /**
-    * voisins
-    * null
-    **/
-   public  void addVoisinsListener(VoisinsListener data){
-      voisinsListeners.add(data);
-   }
-
-   /**
-    * voisins
-    * null
-    **/
-   public  void removeVoisinsListener(VoisinsListener data){
-      voisinsListeners.remove(data);
+   public  void removeChatTwoListener(ChatTwoListener data){
+      chatTwoListeners.remove(data);
    }
 
    /**
@@ -653,51 +755,19 @@ public class ChatFacade extends Chat implements ChatFacadeInterface {
    }
 
    /**
-    * undo
-    * 
-    **/
-   public  void addUndoListener(UndoListener data){
-      undoListeners.add(data);
-   }
-
-   /**
-    * undo
-    * 
-    **/
-   public  void removeUndoListener(UndoListener data){
-      undoListeners.remove(data);
-   }
-
-   /**
-    * logUndo
-    * 
-    **/
-   public  void addLogUndoListener(LogUndoListener data){
-      logUndoListeners.add(data);
-   }
-
-   /**
-    * logUndo
-    * 
-    **/
-   public  void removeLogUndoListener(LogUndoListener data){
-      logUndoListeners.remove(data);
-   }
-
-   /**
-    * chat
+    * Queryvoisins
     * null
     **/
-   public  void addChatListener(ChatListener data){
-      chatListeners.add(data);
+   public  void addQueryvoisinsListener(QueryvoisinsListener data){
+      QueryvoisinsListeners.add(data);
    }
 
    /**
-    * chat
+    * Queryvoisins
     * null
     **/
-   public  void removeChatListener(ChatListener data){
-      chatListeners.remove(data);
+   public  void removeQueryvoisinsListener(QueryvoisinsListener data){
+      QueryvoisinsListeners.remove(data);
    }
 
    /**
@@ -714,22 +784,6 @@ public class ChatFacade extends Chat implements ChatFacadeInterface {
     **/
    public  void removeConnectToListener(ConnectToListener data){
       connectToListeners.remove(data);
-   }
-
-   /**
-    * send
-    * 
-    **/
-   public  void addSendListener(SendListener data){
-      sendListeners.add(data);
-   }
-
-   /**
-    * send
-    * 
-    **/
-   public  void removeSendListener(SendListener data){
-      sendListeners.remove(data);
    }
 
 
